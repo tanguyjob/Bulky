@@ -1,6 +1,7 @@
 ﻿using BulkyWeb.Controllers.Data;
 using BulkyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BulkyWeb.Controllers
 {
@@ -24,8 +25,18 @@ namespace BulkyWeb.Controllers
 
         [HttpPost]
         public IActionResult Create(Category obj) {
-        
-            if(obj.Name.ToLower()==obj.DisplayOrder.ToString())
+
+
+           
+                if (obj.Name != null &&obj.Name == obj.DisplayOrder.ToString())
+                {
+                    ModelState.AddModelError("name", "The DisplayOrder connot exactly match the Name");
+                }
+
+                if (obj.Name!= null && obj.Name.ToLower() == "test")
+                {
+                    ModelState.AddModelError("", "test is an invalid value");
+                }
             
             if (ModelState.IsValid)
             {
