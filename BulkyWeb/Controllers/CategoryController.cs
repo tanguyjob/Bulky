@@ -21,5 +21,19 @@ namespace BulkyWeb.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Create(Category obj) {
+        
+            if(obj.Name.ToLower()==obj.DisplayOrder.ToString())
+            
+            if (ModelState.IsValid)
+            {
+                _dbContext.Add(obj);
+                _dbContext.SaveChanges();
+                return RedirectToAction("Index", "Category");
+            }
+            return View();
+        }
     }
 }
