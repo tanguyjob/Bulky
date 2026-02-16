@@ -49,7 +49,7 @@ namespace BulkyWeb.Controllers
 
 
 
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id)  
         {
             if (id == null || id==0)
             {
@@ -66,26 +66,47 @@ namespace BulkyWeb.Controllers
         [HttpPost]
         public IActionResult Edit(Category obj)
         {
-
-
-
-            if (obj.Name != null && obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("name", "The DisplayOrder connot exactly match the Name");
-            }
-
-            if (obj.Name != null && obj.Name.ToLower() == "test")
-            {
-                ModelState.AddModelError("", "test is an invalid value");
-            }
-
+     
+          
             if (ModelState.IsValid)
             {
-                _dbContext.Add(obj);
+                _dbContext.Update(obj);
                 _dbContext.SaveChanges();
                 return RedirectToAction("Index", "Category");
             }
             return View();
+        }
+
+
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Category categoryFromDb = _dbContext.Categories.Where(u => u.Id == id).FirstOrDefault();
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(categoryFromDb);
+        }
+
+        [HttpPost,ActionName("Delete")]
+        public IActionResult DeletePOST(int? id)
+        {
+
+            Category obj = _dbContext.Categories.Find(id);
+
+            if(obj==null)
+            { 
+                  return NotFound(); 
+            }
+            _dbContext.Categories.Remove(obj);
+            _dbContext.SaveChanges();
+            return RedirectToAction("Index", "Category");
+         
         }
     }
 }
